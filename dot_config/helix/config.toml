@@ -1,0 +1,11 @@
+theme = "catppuccin_macchiato"
+
+[editor]
+cursorline = true
+
+[editor.whitespace.render]
+space = "all"
+tab = "all"
+newline = "none"
+nbsp = "all"
+nnbsp = "all"

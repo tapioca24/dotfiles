@@ -1,0 +1,46 @@
+[user]
+	name = tapioca24
+	email = h.mitani24@gmail.com
+[core]
+	autocrlf = input
+	pager = delta
+[init]
+	defaultBranch = main
+[commit]
+	verbose = true
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[fetch]
+	prune = true
+	pruneTags = true
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true
+	followTags = true
+	default = simple
+[merge]
+	conflictstyle = zdiff3
+[rebase]
+	autoSquash = true
+	autoStash = true
+	updateRefs = true
+[rerere]
+	enabled = true
+	autoupdate = true
+[diff]
+	algorithm = histogram
+	indentHeuristic = true
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
+[interactive]
+	diffFilter = delta --color-only
+[include]
+	path = ~/.config/delta/themes/catppucchin.gitconfig
+[delta]
+	side-by-side = true
+	navigate = true
+	features = catppuccin-macchiato

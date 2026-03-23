@@ -1,0 +1,17 @@
+# Theme
+theme = Catppuccin Macchiato
+font-family = Maple Mono Normal NL NF CN
+background-opacity = 0.85
+background-blur-radius = 16
+
+# Window
+window-padding-x = 4
+window-padding-y = 4
+window-padding-balance = true
+
+# Quick Terminal
+quick-terminal-size = 970px
+quick-terminal-position = left
+quick-terminal-screen = macos-menu-bar
+quick-terminal-animation-duration = 0
+keybind = global:alt+enter=toggle_quick_terminal
