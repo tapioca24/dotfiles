@@ -1,0 +1,30 @@
+#!/bin/bash
+
+options=(
+  style=round
+  width=6
+  hidpi=on
+  active_color=0xffc6a0f6
+  inactive_color=0xff363a4f
+)
+
+# 以下は AeroSpace の終了時に borders を停止させる処理
+
+aerospace_running() {
+  pgrep -aqx "AeroSpace"
+}
+
+if aerospace_running; then
+# AeroSpace の起動時は borders をバックグラウンドで実行し、AeroSpace が終了するまで待機する
+  borders "${options[@]}" &
+
+  while aerospace_running; do
+    sleep 2
+  done
+
+  # AeroSpace が終了したら borders も停止する
+  pkill -ax "borders"
+else
+  # 単体起動時は通常どおり borders 単体で実行する
+  borders "${options[@]}"
+fi
