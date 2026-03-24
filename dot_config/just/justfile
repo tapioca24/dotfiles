@@ -10,11 +10,11 @@ update: nix-update darwin-switch sheldon-update
 
 # nix flake inputs を更新
 nix-update:
-    sudo nix flake update --flake ~/.config/nix-darwin
+    nix flake update --flake ~/.config/nix-darwin
 
 # nix-darwin 設定を反映
 darwin-switch:
-    sudo darwin-rebuild switch --flake ~/.config/nix-darwin
+    sudo darwin-rebuild switch --flake ~/.config/nix-darwin#$(scutil --get LocalHostName)
 
 # sheldon プラグインを更新
 sheldon-update:
