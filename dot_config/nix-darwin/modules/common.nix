@@ -56,8 +56,8 @@
 
   # フォントのインストール
   fonts.packages = with pkgs; [
-    # プログラミングフォント（NerdFont + 中国語対応）
     maple-mono.NormalNL-NF-CN-unhinted
+    moralerspace
   ];
 
   # flakes と nix コマンドを有効化
