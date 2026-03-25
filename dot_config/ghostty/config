@@ -1,7 +1,7 @@
 # Theme
 theme = Catppuccin Macchiato
-font-family = Moralerspace Neon
-background-opacity = 0.85
+font-family = HackGen35 Console NF
+background-opacity = 0.90
 background-blur-radius = 16
 
 # Window
