@@ -1,6 +1,6 @@
 # Theme
 theme = Catppuccin Macchiato
-font-family = HackGen35 Console NF
+font-family = Maple Mono Normal NL NF
 background-opacity = 0.90
 background-blur-radius = 16
 

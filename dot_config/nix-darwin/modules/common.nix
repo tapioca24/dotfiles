@@ -56,7 +56,7 @@
 
   # フォントのインストール
   fonts.packages = with pkgs; [
-    maple-mono.NormalNL-NF-CN-unhinted
+    maple-mono.NormalNL-NF-unhinted
     moralerspace
     hackgen-nf-font
   ];
