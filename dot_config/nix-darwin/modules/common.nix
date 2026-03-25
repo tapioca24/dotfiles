@@ -50,6 +50,7 @@
     taps = [
     ];
     brews = [
+      "mise"
     ];
   };
 
