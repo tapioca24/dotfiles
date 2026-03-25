@@ -25,6 +25,8 @@
         modules = [
           # 全ホスト共通の設定
           ./modules/common.nix
+          # macOS システム設定
+          ./modules/macos.nix
           # homebrew.* オプションを使えるようにする
           nix-homebrew.darwinModules.nix-homebrew
           # ホスト固有の設定

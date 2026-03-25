@@ -26,6 +26,7 @@
     jaq
     just
     just-lsp
+    # mise
     ripgrep
     sd
     sheldon
@@ -65,4 +66,7 @@
 
   # 現在適用中の設定のコミットハッシュを記録（未コミットの場合は dirtyRev）
   system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
+
+  # Touch ID で sudo を許可
+  # security.pam.services.sudo_local.touchIdAuth = true;
 }
