@@ -2,7 +2,7 @@
 theme = Catppuccin Macchiato
 font-family = Maple Mono Normal NL NF
 font-family = HackGen
-background-opacity = 0.90
+background-opacity = 0.85
 background-blur-radius = 16
 
 # Window
