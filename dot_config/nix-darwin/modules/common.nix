@@ -57,8 +57,7 @@
   # フォントのインストール
   fonts.packages = with pkgs; [
     maple-mono.NormalNL-NF-unhinted
-    moralerspace
-    hackgen-nf-font
+    hackgen-font
   ];
 
   # flakes と nix コマンドを有効化

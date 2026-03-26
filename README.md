@@ -64,7 +64,8 @@
 | Tool | Description |
 |------|-------------|
 | [Catppuccin Macchiato](https://github.com/catppuccin/catppuccin) | color theme (used across all tools) |
-| [Maple Mono NF CN](https://github.com/subframe7536/maple-font) | programming font |
+| [Maple Mono Normal NL NF](https://github.com/subframe7536/maple-font) | programming font |
+| [HackGen](https://github.com/yuru7/HackGen) | programming font (Japanese fallback) |
 
 ## Setup
 
