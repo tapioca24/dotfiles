@@ -23,11 +23,6 @@ export FZF_DEFAULT_OPTS=" \
 --color=selected-bg:#494D64 \
 --color=border:#6E738D,label:#CAD3F5"
 
-# Wrappers
-# claude 終了後に端末の状態をリセット (キーシーケンス文字化け対策)
-claude() { command claude "$@"; reset; }
-
-# Aliases
 alias ls="eza"
 alias ll="eza -l"
 alias la="eza -a"
