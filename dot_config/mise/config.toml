@@ -1,5 +1,7 @@
 [tools]
 node = "24"
+"npm:difit" = "latest"
+pnpm = "10"
 
 [settings]
 trusted_config_paths = ["~/ghq/github.com/tapioca24"]
