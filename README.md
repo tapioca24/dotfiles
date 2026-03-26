@@ -29,6 +29,8 @@
 | [zsh-abbr](https://github.com/olets/zsh-abbr) | abbreviation expansion |
 | [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | command suggestions |
 | [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting) | syntax highlighting |
+| [ni.zsh](https://github.com/azu/ni.zsh) | package manager auto-detection (`ni`, `nr`, etc.) |
+| [fzf-git.sh](https://github.com/junegunn/fzf-git.sh) | fzf keybindings for git objects |
 | [fzf](https://github.com/junegunn/fzf) | fuzzy finder |
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | smart cd |
 
