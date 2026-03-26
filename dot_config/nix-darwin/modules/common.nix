@@ -48,9 +48,15 @@
     # darwin-rebuild 時に brew upgrade を実行
     onActivation.upgrade = true;
     taps = [
+      "arto-app/tap"
+      "k1LoW/tap"
     ];
     brews = [
       "mise"
+      "k1LoW/tap/mo"
+    ];
+    casks = [
+      "arto-app/tap/arto"
     ];
   };
 
