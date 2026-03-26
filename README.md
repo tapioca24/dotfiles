@@ -1,5 +1,12 @@
 # dotfiles
 
+## Package Management Policy
+
+- **Nix** — CLI tools and system packages. Nix is preferred by default.
+- **Homebrew** — Fallback for packages unavailable in Nix.
+- **mise** — Language runtimes and tools that require per-project version switching (Node, etc.).
+- **Manual** — GUI applications are not managed here; install them manually.
+
 ## Tools
 
 ### System
@@ -67,22 +74,35 @@
 | [Maple Mono Normal NL NF](https://github.com/subframe7536/maple-font) | programming font |
 | [HackGen](https://github.com/yuru7/HackGen) | programming font (Japanese fallback) |
 
-## Setup
+## Setup on a New Machine
 
 ### Prerequisites
+
+Set the hostname:
+
+```sh
+sudo scutil --set LocalHostName <hostname>
+sudo scutil --set ComputerName <hostname>
+```
 
 ### Installation
 
 ```sh
-# 1. Install Nix
+# 1. Install Nix (DeterminateSystems)
+curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 
-# 2. Install nix-darwin
+# 2. Setup chezmoi
+nix run nixpkgs#chezmoi -- init tapioca24
+nix run nixpkgs#chezmoi -- apply
 
-# 3. Setup chezmoi
-chezmoi init tapioca24
+# 3. Add your host to ~/.config/nix-darwin/hosts and register it in flake.nix
 
-# 4 Add your host to ~/.config/nix-darwin/hosts
-
-# 5. darwin-rebuild switch
-sudo darwin-rebuild switch --flake ~/.config/nix-darwin#(scutil --get LocalHostName)
+# 4. Install nix-darwin (initial bootstrap)
+sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/.config/nix-darwin#$(scutil --get LocalHostName)
 ```
+
+### Manual Steps
+
+Install the following tools that have configs in this repo but are not managed by Nix:
+
+- [Ghostty](https://ghostty.org) — terminal emulator
