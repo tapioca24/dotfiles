@@ -30,7 +30,6 @@ alias la="eza -a"
 
 # Tool initializations
 eval "$(sheldon source)"
-eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 eval "$(mise activate zsh)"
 source <(fzf --zsh)
@@ -40,3 +39,7 @@ source ~/.config/zsh/just.zsh
 
 # Notification bell for long-running commands
 source ~/.config/zsh/zbell.zsh
+
+# pure setup
+autoload -U promptinit; promptinit
+prompt pure

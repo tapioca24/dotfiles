@@ -27,10 +27,10 @@
     just
     just-lsp
     # mise
+    pure-prompt
     ripgrep
     sd
     sheldon
-    starship
     uv
     vim
     xdg-ninja
