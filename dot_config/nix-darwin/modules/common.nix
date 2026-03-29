@@ -26,7 +26,7 @@
     jaq
     just
     just-lsp
-    # mise
+    mise
     pure-prompt
     ripgrep
     sd
@@ -52,7 +52,6 @@
       "k1LoW/tap"
     ];
     brews = [
-      "mise"
       "k1LoW/tap/mo"
     ];
     casks = [
