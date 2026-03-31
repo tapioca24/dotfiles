@@ -26,6 +26,7 @@
     jaq
     just
     just-lsp
+    lazygit
     mise
     pure-prompt
     ripgrep
