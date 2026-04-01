@@ -35,6 +35,7 @@
     uv
     vim
     xdg-ninja
+    yazi
     zoxide
   ];
 

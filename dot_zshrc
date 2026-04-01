@@ -43,3 +43,6 @@ source ~/.config/zsh/zbell.zsh
 # pure setup
 autoload -U promptinit; promptinit
 prompt pure
+
+# Yazi wrapper to change directory after execution
+source ~/.config/zsh/yazi.zsh
