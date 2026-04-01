@@ -53,6 +53,7 @@
 | [dust](https://github.com/bootandy/dust) | `du` replacement |
 | [jaq](https://github.com/01mf02/jaq) | `jq` compatible JSON processor |
 | [btop](https://github.com/aristocratos/btop) | system monitor |
+| [mo](https://github.com/k1LoW/mo) | Markdown viewer |
 
 ### Git
 
