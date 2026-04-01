@@ -24,7 +24,7 @@
 |------|-------------|
 | [Ghostty](https://ghostty.org) | terminal emulator |
 | [zsh](https://www.zsh.org) | shell |
-| [starship](https://github.com/starship/starship) | prompt |
+| [pure](https://github.com/sindresorhus/pure) | prompt |
 | [sheldon](https://github.com/rossmacarthur/sheldon) | zsh plugin manager |
 | [zsh-abbr](https://github.com/olets/zsh-abbr) | abbreviation expansion |
 | [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | command suggestions |
@@ -44,6 +44,7 @@
 
 | Tool | Description |
 |------|-------------|
+| [yazi](https://github.com/sxyazi/yazi) | terminal file manager |
 | [eza](https://github.com/eza-community/eza) | `ls` replacement |
 | [bat](https://github.com/sharkdp/bat) | `cat` replacement |
 | [fd](https://github.com/sharkdp/fd) | `find` replacement |
@@ -57,6 +58,7 @@
 
 | Tool | Description |
 |------|-------------|
+| [lazygit](https://github.com/jesseduffield/lazygit) | TUI git client |
 | [delta](https://github.com/dandavison/delta) | diff pager |
 | [gh](https://github.com/cli/cli) | GitHub CLI |
 | [ghq](https://github.com/x-motemen/ghq) | repository manager |
