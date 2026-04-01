@@ -34,15 +34,12 @@ eval "$(zoxide init zsh)"
 eval "$(mise activate zsh)"
 source <(fzf --zsh)
 
-# Just completions
-source ~/.config/zsh/just.zsh
-
-# Notification bell for long-running commands
-source ~/.config/zsh/zbell.zsh
-
 # pure setup
 autoload -U promptinit; promptinit
 prompt pure
 
-# Yazi wrapper to change directory after execution
+# Load custom scripts
+source ~/.config/zsh/just.zsh
+source ~/.config/zsh/zbell.zsh
 source ~/.config/zsh/yazi.zsh
+source ~/.config/zsh/ghq.zsh
