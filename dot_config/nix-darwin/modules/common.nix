@@ -22,6 +22,7 @@
     git
     helix
     httpie
+    hyperfine
     jankyborders
     jaq
     just
