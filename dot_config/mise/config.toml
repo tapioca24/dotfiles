@@ -1,6 +1,5 @@
 [tools]
 node = "24"
-"npm:difit" = "latest"
 pnpm = "10"
 
 [settings]
