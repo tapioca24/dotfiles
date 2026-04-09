@@ -45,3 +45,5 @@
 	side-by-side = true
 	navigate = true
 	features = catppuccin-macchiato
+[ghq]
+	user = tapioca24
