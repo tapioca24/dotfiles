@@ -24,13 +24,13 @@
     httpie
     hyperfine
     jankyborders
-    jaq
     just
     just-lsp
     lazygit
     mise
     pure-prompt
     ripgrep
+    rtk
     sd
     sheldon
     uv
@@ -51,14 +51,10 @@
     # darwin-rebuild 時に brew upgrade を実行
     onActivation.upgrade = true;
     taps = [
-      "arto-app/tap"
       "k1LoW/tap"
     ];
     brews = [
       "k1LoW/tap/mo"
-    ];
-    casks = [
-      "arto-app/tap/arto"
     ];
   };
 
