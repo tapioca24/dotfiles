@@ -25,6 +25,7 @@
     # Finder
     finder = {
       AppleShowAllFiles = true;                 # 隠しファイルを表示
+      AppleShowAllExtensions = true;            # 拡張子を常に表示
       FXDefaultSearchScope = "SCcf";            # 検索範囲をカレントフォルダに設定
       ShowPathbar = true;                       # パスバーを表示
       FXEnableExtensionChangeWarning = false;   # ファイル拡張子変更の警告を無効化
