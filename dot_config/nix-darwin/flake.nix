@@ -37,5 +37,7 @@
   {
     # `darwin-rebuild switch --flake .#mtn-mba-m5` で適用するシステム設定
     darwinConfigurations."mtn-mba-m5" = mkDarwinSystem ./hosts/mtn-mba-m5.nix;
+    # `darwin-rebuild switch --flake .#kaopc-1511` で適用するシステム設定
+    darwinConfigurations."kaopc-1511" = mkDarwinSystem ./hosts/kaopc-1511.nix;
   };
 }
