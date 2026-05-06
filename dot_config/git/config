@@ -47,3 +47,5 @@
 	features = catppuccin-macchiato
 [ghq]
 	user = tapioca24
+[includeIf "gitdir:~/ghq/gitlab.kaonavi.jp/"]
+	path = ~/.config/git/config.work
