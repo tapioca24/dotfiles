@@ -31,7 +31,7 @@ default-root-container-orientation = 'auto'
 # 参照: https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
 # 参照: https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 # デフォルト値（キーを省略した場合）: on-focused-monitor-changed = []
-on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+on-focused-monitor-changed = []
 
 # このフラグを切り替えることで macOS の「アプリを隠す」(cmd-h) 機能を実質的に無効にできます
 # この macOS 機能を使っていないが、誤って cmd-h や cmd-alt-h を押してしまう場合に便利です
