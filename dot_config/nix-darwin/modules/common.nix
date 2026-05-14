@@ -20,6 +20,7 @@
     ghq
     gibo
     git
+    glab
     helix
     httpie
     hyperfine
