@@ -6,6 +6,7 @@
   # Nix で管理するシステム共通パッケージ
   environment.systemPackages = with pkgs; [
     aerospace
+    age
     bat
     btop
     codex
