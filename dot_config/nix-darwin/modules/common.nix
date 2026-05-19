@@ -7,7 +7,7 @@
   environment.systemPackages = with pkgs; [
     aerospace
     age
-    awscli
+    awscli2
     bat
     btop
     codex
@@ -36,6 +36,7 @@
     rtk
     sd
     sheldon
+    ssm-session-manager-plugin
     uv
     vim
     xdg-ninja
