@@ -2,6 +2,7 @@
 go = "1"
 node = "24"
 pnpm = "10"
+python = "3.14"
 
 [settings]
 trusted_config_paths = ["~/ghq/github.com/tapioca24"]
