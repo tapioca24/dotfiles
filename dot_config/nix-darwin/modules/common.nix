@@ -31,6 +31,7 @@
     just-lsp
     lazygit
     mise
+    ni
     pure-prompt
     ripgrep
     rtk
