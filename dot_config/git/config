@@ -49,3 +49,10 @@
 	user = tapioca24
 [includeIf "gitdir:~/ghq/gitlab.kaonavi.jp/"]
 	path = ~/.config/git/config.work
+[alias]
+	next = stack next
+	prev = stack previous
+	reword = stack reword
+	amend = stack amend
+	sync = stack sync
+	run = stack run
