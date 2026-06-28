@@ -225,7 +225,7 @@ alt-shift-l = ['join-with right', 'mode main']
 # Typeless
 [[on-window-detected]]
 if.app-id = "now.typeless.desktop"
-run = ["layout floating", "move-node-to-workspace G"]
+run = ["layout floating", "move-node-to-workspace Q"]
 
 # Music
 [[on-window-detected]]
