@@ -10,6 +10,7 @@
     awscli2
     bat
     btop
+    ccusage
     codex
     chezmoi
     delta
@@ -38,6 +39,8 @@
     sd
     sheldon
     ssm-session-manager-plugin
+    typescript
+    typescript-language-server
     uv
     vim
     xdg-ninja
@@ -60,6 +63,7 @@
     ];
     brews = [
       "k1LoW/tap/mo"
+      "herdr"
     ];
   };
 
