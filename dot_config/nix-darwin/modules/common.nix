@@ -63,7 +63,9 @@
     ];
     brews = [
       "k1LoW/tap/mo"
+      "crit"
       "herdr"
+      "hunk"
     ];
   };
 
