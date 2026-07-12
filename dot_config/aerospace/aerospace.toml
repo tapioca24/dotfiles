@@ -222,6 +222,11 @@ alt-shift-l = ['join-with right', 'mode main']
 # ウィンドウが検出されたときに実行されるコールバック
 # 参照: https://nikitabobko.github.io/AeroSpace/guide#callbacks
 
+# Editaro
+[[on-window-detected]]
+if.app-id = "com.electron.editaro"
+run = "layout floating"
+
 # Typeless
 [[on-window-detected]]
 if.app-id = "now.typeless.desktop"
