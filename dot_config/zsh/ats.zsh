@@ -78,6 +78,45 @@ function recruitment-flow() {
   fi
 }
 
+function manage-flow() {
+  # 引数チェック
+  if [[ "$1" != "0" && "$1" != "1" ]]; then
+    echo "❌ エラー: 引数に 1（有効化）または 0（無効化）を指定してください"
+    return 1
+  fi
+
+  # プロジェクトルートチェック
+  if [[ ! -f "docker-compose.yml" && ! -f "compose.yml" && ! -f "docker-compose.yaml" ]]; then
+    echo "❌ エラー: docker-compose.yml が見つかりません。プロジェクトルートで実行してください"
+    return 1
+  fi
+
+  # コンテナ起動チェック
+  local running_services
+  running_services=$(docker compose ps --services --filter status=running 2>/dev/null)
+
+  if ! echo "$running_services" | grep -q "^mysql$"; then
+    echo "❌ エラー: mysql コンテナが起動していません"
+    return 1
+  fi
+
+  if [[ "$1" == "1" ]]; then
+    echo "🔄 選考フロー管理 Toggle を有効化しています..."
+    docker compose exec -T mysql mysql -uroot -ppassword common < backend/build/toggles/manage_flow_toggle_local_on.sql || {
+      echo "❌ エラー: MySQL への SQL 実行に失敗しました"
+      return 1
+    }
+    echo "✅ 選考フロー管理 Toggle を有効化しました"
+  else
+    echo "🔄 選考フロー管理 Toggle を無効化しています..."
+    docker compose exec -T mysql mysql -uroot -ppassword common < backend/build/toggles/manage_flow_toggle_off.sql || {
+      echo "❌ エラー: MySQL への SQL 実行に失敗しました"
+      return 1
+    }
+    echo "✅ 選考フロー管理 Toggle を無効化しました"
+  fi
+}
+
 function ssm() {
   local selected instance_id
 
