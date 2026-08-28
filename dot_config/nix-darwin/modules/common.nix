@@ -25,7 +25,9 @@
     git
     glab
     helix
+    herdr
     httpie
+    hunk
     hyperfine
     jankyborders
     just
@@ -64,8 +66,6 @@
     brews = [
       "k1LoW/tap/mo"
       "crit"
-      "herdr"
-      "hunk"
     ];
   };
 
