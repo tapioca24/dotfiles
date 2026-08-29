@@ -9,3 +9,6 @@ tab = "all"
 newline = "none"
 nbsp = "all"
 nnbsp = "all"
+
+[editor.soft-wrap]
+enable = true
