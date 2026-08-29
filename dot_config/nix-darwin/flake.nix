@@ -11,6 +11,8 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     # Homebrew 自体を Nix で管理するツール
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    # AI エージェント向け curl 代替 CLI
+    ax.url = "github:yusukebe/ax";
   };
 
   # inputs 全体を inputs という名前でも参照しつつ、よく使う nix-darwin・nix-homebrew を分解して受け取る

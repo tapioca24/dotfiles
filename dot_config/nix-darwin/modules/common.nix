@@ -8,6 +8,7 @@
     aerospace
     age
     awscli2
+    inputs.ax.packages.${pkgs.system}.default
     bat
     btop
     ccusage
