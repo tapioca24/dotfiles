@@ -19,6 +19,7 @@
     eza
     fastfetch
     fd
+    ffmpeg
     fzf
     gh
     ghq
@@ -66,6 +67,7 @@
     ];
     brews = [
       "k1LoW/tap/mo"
+      "agent-browser"
       "crit"
     ];
   };
