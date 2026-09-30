@@ -68,6 +68,7 @@
     brews = [
       "k1LoW/tap/mo"
       "agent-browser"
+      "backlog-md"
       "crit"
     ];
   };
