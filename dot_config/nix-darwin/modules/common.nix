@@ -12,6 +12,7 @@
     bat
     btop
     ccusage
+    codegraph
     codex
     chezmoi
     delta
