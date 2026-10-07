@@ -117,11 +117,22 @@ function manage-flow() {
   fi
 }
 
+function _aws_ensure_login() {
+    if ! aws sts get-caller-identity --profile apples-bastion &>/dev/null; then
+        echo "Not logged in. Running 'aws sso login'..."
+        aws sso login --profile apples-bastion || return 1
+    fi
+}
+
 function ssm() {
+  _aws_ensure_login || return
+  
   local selected instance_id
+  bastion_profile="apples-bastion"
 
   selected=$(
     aws ec2 describe-instances \
+      --profile "$bastion_profile" \
       --filters \
         "Name=tag:Name,Values=*apples*" \
         "Name=instance-state-name,Values=running" \
@@ -136,5 +147,5 @@ function ssm() {
 
   instance_id=$(awk '{print $NF}' <<< "$selected")
 
-  aws ssm start-session --target "$instance_id"
+  aws ssm start-session --profile "$bastion_profile" --target "$instance_id"
 }
