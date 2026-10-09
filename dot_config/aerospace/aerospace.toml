@@ -240,7 +240,7 @@ run = "move-node-to-workspace P"
 # Slack
 [[on-window-detected]]
 if.app-id = "com.tinyspeck.slackmacgap"
-run = "move-node-to-workspace U"
+run = ["layout tiling", "move-node-to-workspace U"]
 
 # コマンドやコールバックの環境変数を設定できます。
 # 参照: https://nikitabobko.github.io/AeroSpace/guide#exec-env-vars
