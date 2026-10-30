@@ -1,6 +1,7 @@
 # herdr の worktree 操作
 #   wt            fzf で選んで開く
 #   wt n [branch [base]] 作成して開く (<repo>/.claude/worktrees/<branch-slug>)
+#                        左に claude、右を上下 2 分割のレイアウトで開く
 #                        base 省略時は origin のデフォルトブランチから派生
 #   wt d          fzf (複数選択可) で選んで削除 (今いる worktree は除く)
 #   wt d .        今いる worktree を削除 (main に移動してから)
@@ -54,6 +55,15 @@ function _wt_new() {
     echo "$out" >&2
     return 1
   }
+  _wt_layout "$(jq -r '.result.root_pane.pane_id' <<<"$out")"
+}
+
+# 左: claude / 右: 上下 2 分割。root pane (左) にフォーカスを残す
+function _wt_layout() {
+  local left=$1 right
+  right=$(herdr pane split --pane "$left" --direction right --no-focus | jq -r '.result.pane.pane_id') || return 1
+  herdr pane split --pane "$right" --direction down --no-focus >/dev/null
+  herdr pane run "$left" claude >/dev/null
 }
 
 function _wt_remove_one() {
