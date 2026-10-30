@@ -28,10 +28,12 @@ function _wt_pick() {
 }
 
 function _wt_open() {
-  local sel wt_path
+  local sel wt_path main
   sel=$(_wt_pick) || return 1
   wt_path=$(cut -f3 <<<"$sel")
-  herdr worktree open --path "$wt_path" --focus >/dev/null
+  main=$(_wt_list | awk -F'\t' '$5 == "false" { print $3; exit }')
+  # linked worktree の workspace からは開けないので、親 repo を起点にする
+  herdr worktree open --cwd "$main" --path "$wt_path" --focus >/dev/null
 }
 
 function _wt_new() {
@@ -41,7 +43,7 @@ function _wt_new() {
   fi
   [[ -z $branch ]] && return 1
   common=$(git rev-parse --path-format=absolute --git-common-dir) || return 1
-  out=$(herdr worktree create --branch "$branch" \
+  out=$(herdr worktree create --cwd "${common:h}" --branch "$branch" \
     --path "${common:h}/.claude/worktrees/${branch//\//-}" --focus 2>&1) || {
     echo "$out" >&2
     return 1
@@ -72,7 +74,7 @@ function _wt_remove() {
     fi
     # 消える場所に残らないよう、先に main へ移動してフォーカスも移す
     cd "$main" || return 1
-    herdr worktree open --path "$main" --focus >/dev/null
+    herdr worktree open --cwd "$main" --path "$main" --focus >/dev/null
     _wt_remove_one "$(cut -f3 <<<"$line")" "$(cut -f4 <<<"$line")" "$main"
     return
   fi
