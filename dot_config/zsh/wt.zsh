@@ -3,6 +3,7 @@
 #   wt n [branch [base]] 作成して開く (<repo>/.claude/worktrees/<branch-slug>)
 #                        左に claude、右を上下 2 分割のレイアウトで開く
 #                        base 省略時は origin のデフォルトブランチから派生
+#                        <repo>/.notes を各 worktree に symlink (全 worktree 共通のメモ置き場)
 #   wt d          fzf (複数選択可) で選んで削除 (今いる worktree は除く)
 #   wt d .        今いる worktree を削除 (main に移動してから)
 
@@ -50,11 +51,15 @@ function _wt_new() {
     base=$(git -C "${common:h}" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)
     base=${base:-main}
   fi
+  local wt_path="${common:h}/.claude/worktrees/${branch//\//-}"
   out=$(herdr worktree create --cwd "${common:h}" --branch "$branch" --base "$base" \
-    --path "${common:h}/.claude/worktrees/${branch//\//-}" --focus 2>&1) || {
+    --path "$wt_path" --focus 2>&1) || {
     echo "$out" >&2
     return 1
   }
+  # 全 worktree 共通のメモ置き場 (<repo>/.notes) を symlink で共有する
+  mkdir -p "${common:h}/.notes"
+  ln -s "${common:h}/.notes" "$wt_path/.notes"
   _wt_layout "$(jq -r '.result.root_pane.pane_id' <<<"$out")"
 }
 
