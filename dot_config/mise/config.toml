@@ -1,10 +1,8 @@
 [tools]
-"cargo:git-branch-stash-cli" = "latest"
-"cargo:git-stack" = "latest"
 go = "1"
 node = "24"
-pnpm = "10"
-python = "3.14"
+pnpm = "12"
+python = "3"
 rust = "1"
 
 [settings]
