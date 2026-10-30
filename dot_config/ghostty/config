@@ -15,4 +15,4 @@ quick-terminal-size = 970px
 quick-terminal-position = left
 quick-terminal-screen = macos-menu-bar
 quick-terminal-animation-duration = 0
-keybind = global:alt+enter=toggle_quick_terminal
+# keybind = global:alt+enter=toggle_quick_terminal
