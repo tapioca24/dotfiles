@@ -51,6 +51,20 @@ function _wt_new() {
     base=$(git -C "${common:h}" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)
     base=${base:-main}
   fi
+  # 既存ブランチだと base から派生せず、既存の状態のまま使われるので確認する
+  if git -C "${common:h}" show-ref --verify --quiet "refs/heads/$branch"; then
+    echo "ブランチ '$branch' は既に存在します。base ($base) からは派生されず、既存の状態で開きます。" >&2
+    local ans
+    read -k 1 "ans?[Y] 既存で開く / [r] 削除して作り直す / [n] 中止: "
+    echo
+    case $ans in
+      [nN]) return 1 ;;
+      [rR])
+        # -d なのでマージ済みでないブランチや他の worktree で使用中のブランチは消えない
+        git -C "${common:h}" branch -d "$branch" || return 1
+        ;;
+    esac
+  fi
   local wt_path="${common:h}/.claude/worktrees/${branch//\//-}"
   out=$(herdr worktree create --cwd "${common:h}" --branch "$branch" --base "$base" \
     --path "$wt_path" --focus 2>&1) || {
