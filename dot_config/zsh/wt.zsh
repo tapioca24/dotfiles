@@ -1,6 +1,7 @@
 # herdr の worktree 操作
 #   wt            fzf で選んで開く
-#   wt n [branch] 作成して開く (<repo>/.claude/worktrees/<branch-slug>)
+#   wt n [branch [base]] 作成して開く (<repo>/.claude/worktrees/<branch-slug>)
+#                        base 省略時は origin のデフォルトブランチから派生
 #   wt d          fzf (複数選択可) で選んで削除 (今いる worktree は除く)
 #   wt d .        今いる worktree を削除 (main に移動してから)
 
@@ -37,13 +38,18 @@ function _wt_open() {
 }
 
 function _wt_new() {
-  local branch=$1 common out
+  local branch=$1 base=$2 common out
   if [[ -z $branch ]]; then
     read "branch?ブランチ名: "
   fi
   [[ -z $branch ]] && return 1
   common=$(git rev-parse --path-format=absolute --git-common-dir) || return 1
-  out=$(herdr worktree create --cwd "${common:h}" --branch "$branch" \
+  # base 未指定なら origin のデフォルトブランチ (取れなければ main)。fetch はしない
+  if [[ -z $base ]]; then
+    base=$(git -C "${common:h}" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)
+    base=${base:-main}
+  fi
+  out=$(herdr worktree create --cwd "${common:h}" --branch "$branch" --base "$base" \
     --path "${common:h}/.claude/worktrees/${branch//\//-}" --focus 2>&1) || {
     echo "$out" >&2
     return 1
@@ -95,6 +101,6 @@ function wt() {
     "") _wt_open ;;
     n) shift; _wt_new "$@" ;;
     d) shift; _wt_remove "$@" ;;
-    *) echo "usage: wt [n [branch] | d [.]]" >&2; return 1 ;;
+    *) echo "usage: wt [n [branch [base]] | d [.]]" >&2; return 1 ;;
   esac
 }
