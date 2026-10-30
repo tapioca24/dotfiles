@@ -1,6 +1,6 @@
 # 全ホスト共通の設定モジュール
 # specialArgs で注入された inputs と、nixpkgs が提供する pkgs を受け取る
-{ pkgs, inputs, ... }:
+{ pkgs, lib, inputs, ... }:
 
 {
   # Nix で管理するシステム共通パッケージ
@@ -69,7 +69,6 @@
     brews = [
       "k1LoW/tap/mo"
       "agent-browser"
-      "backlog-md"
       "crit"
     ];
   };
@@ -79,6 +78,12 @@
     maple-mono.NormalNL-NF-unhinted
     hackgen-font
   ];
+
+  # unfree ライセンスのパッケージのうち、明示的に許可するもの
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "rtk"
+    ];
 
   # flakes と nix コマンドを有効化
   nix.settings.experimental-features = "nix-command flakes";
