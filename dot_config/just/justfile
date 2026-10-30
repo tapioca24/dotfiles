@@ -6,7 +6,7 @@ alias up := update
 alias sw := darwin-switch
 
 # すべて更新（flake update → darwin-rebuild → sheldon）
-update: nix-update darwin-switch sheldon-update
+update: nix-update darwin-switch sheldon-update mise-update
 
 # nix flake inputs を更新
 nix-update:
@@ -19,3 +19,7 @@ darwin-switch:
 # sheldon プラグインを更新
 sheldon-update:
     sheldon lock --update
+
+# mise 管理のパッケージを更新
+mise-update:
+    mise upgrade
