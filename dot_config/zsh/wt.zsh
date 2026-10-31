@@ -51,7 +51,7 @@ function _wt_pick() {
   fi
   local opts=(--reverse --delimiter=$'\t' --with-nth=1,2,3
     --preview 'git -C {3} log --oneline -10; echo; git -C {3} status -sb')
-  [[ $2 == linked ]] && opts+=(--multi --header '@: 今いる worktree')
+  [[ $2 == linked ]] && opts+=(--multi)
   fzf "${opts[@]}" <<<"$lines"
 }
 
