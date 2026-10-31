@@ -1,6 +1,7 @@
 # herdr の worktree 操作
 #   wt            fzf で選んで開く
 #   wt n [branch [base]] 作成して開く (<repo>/.claude/worktrees/<branch-slug>)
+#                        branch 省略時は wt/<形容詞>-<名詞>-YYYYMMDD-HHMMSS を自動生成
 #                        左に claude、右を上下 2 分割のレイアウトで開く
 #                        base 省略時は origin のデフォルトブランチから派生
 #                        <repo>/.notes を各 worktree に symlink (全 worktree 共通のメモ置き場)
@@ -39,12 +40,20 @@ function _wt_open() {
   herdr worktree open --cwd "$main" --path "$wt_path" --focus >/dev/null
 }
 
+# ブランチ名省略時の自動生成用: wt/<形容詞>-<名詞>-YYYYMMDD-HHMMSS
+_wt_adjectives=(happy quick big small red blue green white black brave calm clever cool cute gentle
+  good great hot cold kind lucky new old pretty proud quiet rich shiny silent smart soft strong
+  sweet tall warm wild young bright fresh funny)
+_wt_nouns=(panda tiger apple tea mountain river moon sun cat dog bird fish horse rabbit lion
+  monkey bear fox wolf tree flower rain snow wind cloud star sea lake forest island rice bread
+  cake orange lemon melon ball book bike train)
+
+function _wt_random_branch() {
+  echo "wt/${_wt_adjectives[RANDOM % $#_wt_adjectives + 1]}-${_wt_nouns[RANDOM % $#_wt_nouns + 1]}-$(date +%Y%m%d-%H%M%S)"
+}
+
 function _wt_new() {
-  local branch=$1 base=$2 common out
-  if [[ -z $branch ]]; then
-    read "branch?ブランチ名: "
-  fi
-  [[ -z $branch ]] && return 1
+  local branch=${1:-$(_wt_random_branch)} base=$2 common out
   common=$(git rev-parse --path-format=absolute --git-common-dir) || return 1
   # base 未指定なら origin のデフォルトブランチ (取れなければ main)。fetch はしない
   if [[ -z $base ]]; then
