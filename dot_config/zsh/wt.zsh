@@ -1,16 +1,16 @@
 # herdr の worktree 操作
-#   wt            fzf で選んで開く (今いる worktree は除く)
+#   wt            fzf で選んで開く (現在の worktree は除く)
 #   wt n [branch [base]]
 #                 作成して開く (<repo>/.claude/worktrees/<branch>)
 #                 branch : ブランチ名 (ASCII のみ)。Workspace 表示名 (herdr の --label) にも同じ値を使う
 #                          省略 / "" なら "<形容詞>-<名詞>-YYYYMMDD-HHMMSS" を自動生成
 #                 base   : 派生元。省略 / "" なら origin のデフォルトブランチ (origin/HEAD)
-#                          "." なら今いるブランチ (detached HEAD ではエラー)
+#                          "." なら現在のブランチ (detached HEAD ではエラー)
 #                 左に claude、右を上下 2 分割のレイアウトで開く
 #                 <repo>/.notes を各 worktree に symlink (全 worktree 共通のメモ置き場)
-#   wt d          fzf (複数選択可) で選んで削除。今いる worktree は "@" 付きで候補に入る
-#                 今いる worktree を選んだ場合は、他を消した後に main へ移動してから消す
-#   wt d .        今いる worktree を削除 (main に移動してから)
+#   wt d          fzf (複数選択可) で選んで削除。現在の worktree は "@" 付きで候補に入る
+#                 現在の worktree を選んだ場合は、他を消した後に main へ移動してから消す
+#   wt d .        現在の worktree を削除 (main に移動してから)
 
 _wt_usage="usage: wt [n [branch [base]] | d [.]]"
 
@@ -101,7 +101,7 @@ function _wt_new() {
     echo "ブランチ名として使えません: $branch" >&2
     return 1
   }
-  # base が "." なら今いるブランチから派生する
+  # base が "." なら現在のブランチから派生する
   if [[ $base == . ]]; then
     base=$(git branch --show-current)
     if [[ -z $base ]]; then
@@ -161,7 +161,7 @@ function _wt_remove_one() {
   fi
 }
 
-# 今いる worktree を消す前に呼ぶ。消える場所に残らないよう、main へ移動してフォーカスも移す
+# 現在の worktree を消す前に呼ぶ。消える場所に残らないよう、main へ移動してフォーカスも移す
 function _wt_leave_to_main() {
   local main=$1
   cd "$main" || return 1
@@ -178,7 +178,7 @@ function _wt_remove() {
     cur=$(git rev-parse --show-toplevel 2>/dev/null)
     line=$(awk -F'\t' -v cur="$cur" '$3 == cur && $5 == "true"' <<<"$all")
     if [[ -z $line ]]; then
-      echo "今いる場所は削除できる worktree ではありません" >&2
+      echo "削除できる worktree ではありません" >&2
       return 1
     fi
     _wt_leave_to_main "$main" || return 1
@@ -190,7 +190,7 @@ function _wt_remove() {
   sel=$(_wt_pick "$all" linked) || return 1
   while IFS= read -r line; do
     _wt_fields "$line"
-    # 今いる worktree は、自分のいる workspace ごと消えるので最後に回す
+    # 現在の worktree は、自分のいる workspace ごと消えるので最後に回す
     if [[ ${reply[1]} == @ ]]; then
       cur_line=$line
       continue
