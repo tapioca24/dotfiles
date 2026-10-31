@@ -1,13 +1,19 @@
 # herdr の worktree 操作
 #   wt            fzf で選んで開く
-#   wt n [name [branch [base]]] 作成して開く (<repo>/.claude/worktrees/<branch-slug>)
-#                        name   : Workspace 表示名 (ASCII のみ)。省略時は "<形容詞> <名詞> YYYYMMDD-HHMMSS" を自動生成
-#                        branch : 省略時は name を slug 化 (小文字・英数とハイフンのみ) したもの
-#                        左に claude、右を上下 2 分割のレイアウトで開く
-#                        base   : 省略時は origin のデフォルトブランチ (origin/HEAD) から派生
-#                        <repo>/.notes を各 worktree に symlink (全 worktree 共通のメモ置き場)
-#   wt d          fzf (複数選択可) で選んで削除 (今いる worktree は除く)
-#   wt d .        今いる worktree を削除 (main に移動してから)
+#   wt new [--label <name>] [--branch <name>] [--base <ref>]
+#                 作成して開く (<repo>/.claude/worktrees/<branch>)
+#                 --label  : Workspace 表示名 (ASCII のみ)
+#                 --branch : ブランチ名 (ASCII のみ)
+#                 --base   : 派生元。省略時は origin のデフォルトブランチ (origin/HEAD)
+#                            "." なら今いるブランチ (detached HEAD ではエラー)
+#                 label / branch の省略時の扱い:
+#                   両方省略    : label を "<形容詞> <名詞> YYYYMMDD-HHMMSS" で自動生成し、branch はその slug
+#                   label のみ  : branch は label の slug (小文字・英数とハイフンのみ)
+#                   branch のみ : label は branch をそのまま使う
+#                 左に claude、右を上下 2 分割のレイアウトで開く
+#                 <repo>/.notes を各 worktree に symlink (全 worktree 共通のメモ置き場)
+#   wt rm         fzf (複数選択可) で選んで削除 (今いる worktree は除く)
+#   wt rm .       今いる worktree を削除 (main に移動してから)
 
 # TSV: mark, branch, path, open_workspace_id, is_linked_worktree
 function _wt_list() {
@@ -63,41 +69,76 @@ function _wt_slug() {
 }
 
 function _wt_new() {
-  local name=${1-__unset__} branch=$2 base=$3 common out
-  if (( $# > 3 )); then
-    echo "usage: wt n [name [branch [base]]]" >&2
+  local label branch base common out
+  local usage="usage: wt new [--label <name>] [--branch <name>] [--base <ref>]"
+  local has_label=0 has_branch=0 has_base=0
+  while (( $# )); do
+    case $1 in
+      --label|--branch|--base)
+        if (( $# < 2 )); then
+          echo "$1 に値がありません" >&2
+          echo "$usage" >&2
+          return 1
+        fi
+        case $1 in
+          --label) label=$2; has_label=1 ;;
+          --branch) branch=$2; has_branch=1 ;;
+          --base) base=$2; has_base=1 ;;
+        esac
+        shift 2
+        ;;
+      *)
+        echo "不明な引数: $1" >&2
+        echo "$usage" >&2
+        return 1
+        ;;
+    esac
+  done
+  if (( has_label )) && [[ -z $label ]]; then
+    echo "--label が空です" >&2
     return 1
   fi
-  if [[ $name == __unset__ ]]; then
-    name=$(_wt_random_name)
-  elif [[ -z $name ]]; then
-    echo "Workspace 名が空です" >&2
+  if (( has_branch )) && [[ -z $branch ]]; then
+    echo "--branch が空です" >&2
     return 1
   fi
-  if [[ $name == *[^[:print:]]* || $name == *[^[:ascii:]]* ]]; then
-    echo "Workspace 名は ASCII の印字可能文字のみ使えます: $name" >&2
+  if (( has_base )) && [[ -z $base ]]; then
+    echo "--base が空です" >&2
     return 1
   fi
-  if (( $# >= 2 )) && [[ -z $branch ]]; then
-    echo "ブランチ名が空です" >&2
+  if (( has_branch )) && [[ $branch == *[^[:print:]]* || $branch == *[^[:ascii:]]* ]]; then
+    echo "ブランチ名は ASCII の印字可能文字のみ使えます: $branch" >&2
     return 1
   fi
-  if (( $# >= 3 )) && [[ -z $base ]]; then
-    echo "ベースブランチが空です" >&2
+  if (( has_label )) && [[ $label == *[^[:print:]]* || $label == *[^[:ascii:]]* ]]; then
+    echo "Workspace 名 (--label) は ASCII の印字可能文字のみ使えます: $label" >&2
     return 1
   fi
   common=$(git rev-parse --path-format=absolute --git-common-dir) || return 1
-  if [[ -z $branch ]]; then
-    branch=$(_wt_slug "$name")
+  if (( ! has_label && ! has_branch )); then
+    label=$(_wt_random_name)
+  fi
+  if (( ! has_branch )); then
+    branch=$(_wt_slug "$label")
     if [[ -z $branch ]]; then
-      echo "Workspace 名 '$name' からブランチ名を生成できません。ブランチ名を指定してください" >&2
+      echo "Workspace 名 '$label' からブランチ名を生成できません。--branch を指定してください" >&2
       return 1
     fi
+  elif (( ! has_label )); then
+    label=$branch
   fi
   git check-ref-format --branch "$branch" >/dev/null 2>&1 || {
     echo "ブランチ名として使えません: $branch" >&2
     return 1
   }
+  # base が "." なら今いるブランチから派生する
+  if [[ $base == . ]]; then
+    base=$(git branch --show-current)
+    if [[ -z $base ]]; then
+      echo "detached HEAD のため --base . は使えません。--base に ref を指定してください" >&2
+      return 1
+    fi
+  fi
   # base 未指定なら origin/HEAD (origin のデフォルトブランチ)。fetch はしない
   if [[ -z $base ]]; then
     base=$(git -C "${common:h}" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)
@@ -122,7 +163,7 @@ function _wt_new() {
   fi
   local wt_path="${common:h}/.claude/worktrees/${branch//\//-}"
   out=$(herdr worktree create --cwd "${common:h}" --branch "$branch" --base "$base" \
-    --path "$wt_path" --label "$name" --focus 2>&1) || {
+    --path "$wt_path" --label "$label" --focus 2>&1) || {
     echo "$out" >&2
     return 1
   }
@@ -183,8 +224,8 @@ function wt() {
   fi
   case $1 in
     "") _wt_open ;;
-    n) shift; _wt_new "$@" ;;
-    d) shift; _wt_remove "$@" ;;
-    *) echo "usage: wt [n [name [branch [base]]] | d [.]]" >&2; return 1 ;;
+    new) shift; _wt_new "$@" ;;
+    rm) shift; _wt_remove "$@" ;;
+    *) echo "usage: wt [new [--label <name>] [--branch <name>] [--base <ref>] | rm [.]]" >&2; return 1 ;;
   esac
 }
