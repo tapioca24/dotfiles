@@ -51,8 +51,9 @@ _wt_nouns=(panda tiger apple tea mountain river moon sun cat dog bird fish horse
   monkey bear fox wolf tree flower rain snow wind cloud star sea lake forest island rice bread
   cake orange lemon melon ball book bike train)
 
+# 結果は $REPLY に入れる。$(...) で呼ぶとサブシェルで RANDOM が進まず、毎回同じ名前になる
 function _wt_random_name() {
-  echo "${_wt_adjectives[RANDOM % $#_wt_adjectives + 1]}-${_wt_nouns[RANDOM % $#_wt_nouns + 1]}-$(date +%Y%m%d-%H%M%S)"
+  REPLY="${_wt_adjectives[RANDOM % $#_wt_adjectives + 1]}-${_wt_nouns[RANDOM % $#_wt_nouns + 1]}-$(date +%Y%m%d-%H%M%S)"
 }
 
 function _wt_new() {
@@ -68,7 +69,10 @@ function _wt_new() {
     return 1
   fi
   common=$(git rev-parse --path-format=absolute --git-common-dir) || return 1
-  [[ -z $branch ]] && branch=$(_wt_random_name)
+  if [[ -z $branch ]]; then
+    _wt_random_name
+    branch=$REPLY
+  fi
   git check-ref-format --branch "$branch" >/dev/null 2>&1 || {
     echo "ブランチ名として使えません: $branch" >&2
     return 1
