@@ -1,9 +1,10 @@
 # herdr の worktree 操作
 #   wt            fzf で選んで開く
-#   wt n [branch [base]] 作成して開く (<repo>/.claude/worktrees/<branch-slug>)
-#                        branch 省略時は wt/<形容詞>-<名詞>-YYYYMMDD-HHMMSS を自動生成
+#   wt n [name [branch [base]]] 作成して開く (<repo>/.claude/worktrees/<branch-slug>)
+#                        name   : Workspace 表示名 (ASCII のみ)。省略時は "<形容詞> <名詞> YYYYMMDD-HHMMSS" を自動生成
+#                        branch : 省略時は name を slug 化 (小文字・英数とハイフンのみ) したもの
 #                        左に claude、右を上下 2 分割のレイアウトで開く
-#                        base 省略時は origin のデフォルトブランチから派生
+#                        base   : 省略時は origin のデフォルトブランチ (origin/HEAD) から派生
 #                        <repo>/.notes を各 worktree に symlink (全 worktree 共通のメモ置き場)
 #   wt d          fzf (複数選択可) で選んで削除 (今いる worktree は除く)
 #   wt d .        今いる worktree を削除 (main に移動してから)
@@ -40,7 +41,7 @@ function _wt_open() {
   herdr worktree open --cwd "$main" --path "$wt_path" --focus >/dev/null
 }
 
-# ブランチ名省略時の自動生成用: wt/<形容詞>-<名詞>-YYYYMMDD-HHMMSS
+# Workspace 名省略時の自動生成用: <形容詞> <名詞> YYYYMMDD-HHMMSS
 _wt_adjectives=(happy quick big small red blue green white black brave calm clever cool cute gentle
   good great hot cold kind lucky new old pretty proud quiet rich shiny silent smart soft strong
   sweet tall warm wild young bright fresh funny)
@@ -48,17 +49,62 @@ _wt_nouns=(panda tiger apple tea mountain river moon sun cat dog bird fish horse
   monkey bear fox wolf tree flower rain snow wind cloud star sea lake forest island rice bread
   cake orange lemon melon ball book bike train)
 
-function _wt_random_branch() {
-  echo "wt/${_wt_adjectives[RANDOM % $#_wt_adjectives + 1]}-${_wt_nouns[RANDOM % $#_wt_nouns + 1]}-$(date +%Y%m%d-%H%M%S)"
+function _wt_random_name() {
+  echo "${_wt_adjectives[RANDOM % $#_wt_adjectives + 1]} ${_wt_nouns[RANDOM % $#_wt_nouns + 1]} $(date +%Y%m%d-%H%M%S)"
+}
+
+# Workspace 名 -> ブランチ名: 小文字化し、英数以外の連続をハイフンにして前後のハイフンを除く
+function _wt_slug() {
+  setopt local_options extended_glob
+  local s=${(L)1}
+  s=${s//[^a-z0-9]##/-}
+  s=${s##-##}
+  echo "${s%%-##}"
 }
 
 function _wt_new() {
-  local branch=${1:-$(_wt_random_branch)} base=$2 common out
+  local name=${1-__unset__} branch=$2 base=$3 common out
+  if (( $# > 3 )); then
+    echo "usage: wt n [name [branch [base]]]" >&2
+    return 1
+  fi
+  if [[ $name == __unset__ ]]; then
+    name=$(_wt_random_name)
+  elif [[ -z $name ]]; then
+    echo "Workspace 名が空です" >&2
+    return 1
+  fi
+  if [[ $name == *[^[:print:]]* || $name == *[^[:ascii:]]* ]]; then
+    echo "Workspace 名は ASCII の印字可能文字のみ使えます: $name" >&2
+    return 1
+  fi
+  if (( $# >= 2 )) && [[ -z $branch ]]; then
+    echo "ブランチ名が空です" >&2
+    return 1
+  fi
+  if (( $# >= 3 )) && [[ -z $base ]]; then
+    echo "ベースブランチが空です" >&2
+    return 1
+  fi
   common=$(git rev-parse --path-format=absolute --git-common-dir) || return 1
-  # base 未指定なら origin のデフォルトブランチ (取れなければ main)。fetch はしない
+  if [[ -z $branch ]]; then
+    branch=$(_wt_slug "$name")
+    if [[ -z $branch ]]; then
+      echo "Workspace 名 '$name' からブランチ名を生成できません。ブランチ名を指定してください" >&2
+      return 1
+    fi
+  fi
+  git check-ref-format --branch "$branch" >/dev/null 2>&1 || {
+    echo "ブランチ名として使えません: $branch" >&2
+    return 1
+  }
+  # base 未指定なら origin/HEAD (origin のデフォルトブランチ)。fetch はしない
   if [[ -z $base ]]; then
     base=$(git -C "${common:h}" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)
-    base=${base:-main}
+    if [[ -z $base ]]; then
+      echo "origin/HEAD を解決できません。'git remote set-head origin -a' で設定するか、base を指定してください" >&2
+      return 1
+    fi
   fi
   # 既存ブランチだと base から派生せず、既存の状態のまま使われるので確認する
   if git -C "${common:h}" show-ref --verify --quiet "refs/heads/$branch"; then
@@ -76,7 +122,7 @@ function _wt_new() {
   fi
   local wt_path="${common:h}/.claude/worktrees/${branch//\//-}"
   out=$(herdr worktree create --cwd "${common:h}" --branch "$branch" --base "$base" \
-    --path "$wt_path" --focus 2>&1) || {
+    --path "$wt_path" --label "$name" --focus 2>&1) || {
     echo "$out" >&2
     return 1
   }
@@ -139,6 +185,6 @@ function wt() {
     "") _wt_open ;;
     n) shift; _wt_new "$@" ;;
     d) shift; _wt_remove "$@" ;;
-    *) echo "usage: wt [n [branch [base]] | d [.]]" >&2; return 1 ;;
+    *) echo "usage: wt [n [name [branch [base]]] | d [.]]" >&2; return 1 ;;
   esac
 }
