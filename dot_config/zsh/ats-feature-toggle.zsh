@@ -68,3 +68,13 @@ function manage-flow() {
 function applicant-search() {
   _apply_feature_toggle "応募者検索" "applicant_search" "$1"
 }
+
+# 候補者求人検索
+function applicant-joboffer-search() {
+  _apply_feature_toggle "候補者求人検索" "applicant_joboffer_search" "$1"
+}
+
+# 候補者選考ステータス検索
+function applicant-status-search() {
+  _apply_feature_toggle "候補者選考ステータス検索" "applicant_status_search" "$1"
+}
