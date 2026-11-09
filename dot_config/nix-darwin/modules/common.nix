@@ -36,6 +36,7 @@
     just
     just-lsp
     lazygit
+    leaf-markdown-viewer
     mise
     ni
     pure-prompt
