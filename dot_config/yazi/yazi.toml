@@ -1,2 +1,12 @@
 [mgr]
 show_hidden = true
+
+[opener]
+leaf = [
+  { run = 'leaf %s1', block = true, desc = "leaf", for = "unix" },
+]
+
+[open]
+prepend_rules = [
+  { url = "*.md", use = ["leaf", "edit"] },
+]
