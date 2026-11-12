@@ -21,13 +21,17 @@ function cpf() {
     fi
   done
 
-  osascript - "${@:A}" <<'EOF'
-on run argv
-  set fileList to {}
-  repeat with p in argv
-    set end of fileList to POSIX file (contents of p)
-  end repeat
-  set the clipboard to fileList
-end run
+  osascript -l JavaScript - "${@:A}" <<'EOF'
+ObjC.import("AppKit");
+ObjC.import("Foundation");
+function run(argv) {
+  const pb = $.NSPasteboard.generalPasteboard;
+  pb.clearContents;
+  const urls = $.NSMutableArray.array;
+  argv.forEach(p => urls.addObject($.NSURL.fileURLWithPath(p)));
+  pb.writeObjects(urls);
+  // プロセス終了前にペーストボードへ反映させるため少し待つ
+  $.NSThread.sleepForTimeInterval(0.3);
+}
 EOF
 }
